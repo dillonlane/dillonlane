@@ -1,0 +1,68 @@
+var king = 10;
+var queen = 10;
+var ace = 11;
+var jack = 10;
+
+var cardsList = [2, 3, 4, 5, 6, 7, 8, 9, 10, "jack", "ace", "king", "queen"];
+
+onEvent("Play", "click", function() {
+  firstCard();
+  secondCard();
+});
+
+onEvent("Hit", "click", function() {
+  hitCard();
+});
+
+onEvent("Stay", "click", function() {
+  stay();
+});
+
+onEvent("PlayAgain", "click", function() {
+  setText("Card1", "");
+  setText("Card2", "");
+  setText("Hitcards", "");
+  setScreen("StartScreen");
+});
+
+function secondCard() {
+  var a = randomNumber(0, cardsList.length - 1);
+  setText("Card2", cardsList[a]);
+}
+
+function firstCard() {
+  var i = randomNumber(0, cardsList.length - 1);
+  setText("Card1", cardsList[i]);
+}
+
+function hitCard() {
+  var h = randomNumber(0, cardsList.length - 1);
+  setText("Hitcards", getText("Hitcards") + " " + cardsList[h]);
+}
+
+function stay() {
+  var card1 = getCardValue(getText("Card1"));
+  var card2 = getCardValue(getText("Card2"));
+  var hitcards = getText("Hitcards").trim().split(" ");
+  var total = card1 + card2;
+  for (var i = 0; i < hitcards.length; i++) {
+    total += getCardValue(hitcards[i]);
+  }
+  if (total >= 16 && total <= 21) {
+    setScreen("WinScreen");
+  } else {
+    setScreen("LoseScreen");
+  }
+}
+
+function getCardValue(card) {
+  if (typeof(card) === "number") {
+    return card;
+  } else if (card === "ace") {
+    return ace;
+  } else if (card === "jack" || card === "queen" || card === "king") {
+    return jack;
+  }
+}
+
+
